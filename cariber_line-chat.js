@@ -1,4 +1,5 @@
-document.body.innerHTML(`
+$(document).ready(function () {
+  $(document.body).append(`
 <div
   id="line-chat"
   style="
@@ -93,5 +94,5 @@ document.body.innerHTML(`
     src="https://www.cariber.co/lineChatWidget/LINE.png"
   />
 </div>
-<!--End of Line Chat Plugin-->
 `);
+});
