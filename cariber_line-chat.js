@@ -73,8 +73,24 @@
   const popup = document.createElement("div");
   popup.id = "line-chat-popup";
   popup.innerHTML = `
-    <div style="display:flex;justify-content:left;align-items:center;">
+    <div style="display:flex;justify-content:space-between;">
       <img src="https://www.cariber.co/lineChatWidget/cariber-chat-logo.png" alt="Cariber Chat Logo" style="width:48px;height:48px;">
+      <svg
+        style="cursor: pointer;"
+        onclick="document.getElementById('line-chat-popup').classList.remove('active')"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M6 6L18 18M18 6L6 18"
+          stroke="black"
+          stroke-width="2"
+          stroke-linecap="round"
+        />
+      </svg>
     </div>
     <p style="color:black;margin:1rem 0;text-align:center;">
       สวัสดีครับ สามารถสอบถามเราได้เลยครับ
