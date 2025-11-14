@@ -1,29 +1,21 @@
-$(document).ready(function () {
-  var URLSearchParams_wb = new URLSearchParams(window.location.search);
-  var utmParameters = ["utm_source", "utm_medium", "utm_campaign"];
+document.addEventListener("DOMContentLoaded", function () {
+  const urlParams = new URLSearchParams(window.location.search);
 
-  for (let i = 0; i < utmParameters.length; i++) {
-    var utm_element = utmParameters[i];
-    $("form").each(function (index) {
-      if (URLSearchParams_wb.has(utm_element)) {
-        var value = URLSearchParams_wb.get(utm_element);
-        $(this)
-          .find("." + utm_element)
-          .val(value);
-      }
+  // Loop through all forms
+  document.querySelectorAll("form").forEach((form) => {
+    // Fill fields based on URL parameters matching input[name]
+    urlParams.forEach((value, key) => {
+      const input = form.querySelector(`[name="${key}"]`);
+      if (input) input.value = value;
     });
-  }
 
-  if (URLSearchParams_wb.has("workshop")) {
-    var workshopValue = URLSearchParams_wb.get("workshop");
-    $("form").each(function () {
-      $(this).find('input[name="course"]').val(workshopValue);
-    });
-  }
-
-  $("form").each(function () {
-    $(this)
-      .find(".TimeStamp")
-      .val(new Date().toLocaleString("sv", { timeZone: "Asia/Bangkok" }));
+    // Set timestamp in Bangkok timezone if there's an input with name="TimeStamp"
+    const timestampInput = form.querySelector('[name="TimeStamp"]');
+    if (timestampInput) {
+      const bangkokTime = new Date().toLocaleString("sv", {
+        timeZone: "Asia/Bangkok",
+      });
+      timestampInput.value = bangkokTime;
+    }
   });
 });
