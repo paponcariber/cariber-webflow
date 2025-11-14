@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Set timestamp in Bangkok timezone if there's an input with name="TimeStamp"
-    const timestampInput = form.querySelector('[name="TimeStamp"]');
+    const timestampInput = form.querySelector('input[name="TimeStamp"]');
     if (timestampInput) {
       const bangkokTime = new Date().toLocaleString("sv", {
         timeZone: "Asia/Bangkok",
