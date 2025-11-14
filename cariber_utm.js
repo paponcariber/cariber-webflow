@@ -5,8 +5,14 @@ document.addEventListener("DOMContentLoaded", function () {
   document.querySelectorAll("form").forEach((form) => {
     // Fill fields based on URL parameters matching input[name]
     urlParams.forEach((value, key) => {
-      const input = form.querySelector(`[name="${key}"]`);
-      if (input) input.value = value;
+      // Special case: map 'workshop' to 'course'
+      if (key === "workshop") {
+        const courseInput = form.querySelector('input[name="course"]');
+        if (courseInput) courseInput.value = value;
+      } else {
+        const input = form.querySelector(`input[name="${key}"]`);
+        if (input) input.value = value;
+      }
     });
 
     // Set timestamp in Bangkok timezone if there's an input with name="TimeStamp"
