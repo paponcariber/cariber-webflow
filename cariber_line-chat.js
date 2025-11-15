@@ -93,7 +93,7 @@
       </svg>
     </div>
     <p style="color:black;margin:1rem 0;text-align:center;">
-      สวัสดีครับ สามารถสอบถามเราได้เลยครับ
+      สวัสดีครับ สามารถสอบถามได้เลยครับ
     </p>
     <div style="display:flex;justify-content:center;">
       <a class="line-chat-popup-btn" href="https://lin.ee/DmtQfgp" target="_blank">
