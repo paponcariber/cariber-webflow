@@ -4,11 +4,11 @@
   container.id = "line-chat";
   container.style.cssText = `
     position: fixed;
-    margin: 0 1rem 1rem 0;
-    right: 0;
-    bottom: 0;
+    right: 1rem;
+    bottom: 1rem;
     z-index: 9999;
     font-family: 'Prompt', sans-serif;
+    pointer-events: none;
   `;
   document.body.appendChild(container);
 
@@ -16,13 +16,14 @@
   const style = document.createElement("style");
   style.innerHTML = `
     #line-chat-popup {
+      position: relative;
       opacity: 0;
       transform: translateY(10px);
       transition: opacity 0.25s ease, transform 0.25s ease;
-      pointer-events: none;
+      pointer-events: auto;
+      visibility: hidden;
       background: #ffffff;
       padding: 1.5rem;
-      margin-bottom: 1rem;
       max-width: 20rem;
       border-radius: 1rem;
       box-shadow: 0 8px 24px rgba(0,0,0,0.12);
@@ -30,7 +31,7 @@
     #line-chat-popup.active {
       opacity: 1;
       transform: translateY(0);
-      pointer-events: auto;
+      visibility: visible;
     }
     .line-chat-popup-btn {
       display: block;
@@ -44,6 +45,7 @@
       font-weight: 600;
       transition: background 0.2s ease;
       margin: 0 auto;
+      pointer-events: auto;
     }
     .line-chat-popup-btn:hover {
       background-color: #07a648;
@@ -61,6 +63,7 @@
       white-space: nowrap;
       box-shadow: 0 8px 16px rgba(0,0,0,0.15);
       transition: background 0.2s ease, transform 0.2s ease;
+      pointer-events: auto;    
     }
     .line-chat-toggle:hover {
       background-color: #07a648;
