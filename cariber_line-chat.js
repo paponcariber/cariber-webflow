@@ -1,5 +1,4 @@
 (function () {
-  // --- Create container ---
   const container = document.createElement("div");
   container.id = "line-chat";
   container.style.cssText = `
@@ -8,30 +7,29 @@
     bottom: 1rem;
     z-index: 9999;
     font-family: 'Prompt', sans-serif;
-    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
   `;
   document.body.appendChild(container);
 
   // --- Inject CSS ---
   const style = document.createElement("style");
   style.innerHTML = `
-    #line-chat-popup {
-      position: relative;
-      opacity: 0;
-      transform: translateY(10px);
-      transition: opacity 0.25s ease, transform 0.25s ease;
-      pointer-events: auto;
-      visibility: hidden;
+    .line-chat-popup {
       background: #ffffff;
       padding: 1.5rem;
       max-width: 20rem;
       border-radius: 1rem;
       box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      margin-bottom: 1rem; /* GAP between popup and toggle */
     }
-    #line-chat-popup.active {
+    .line-chat-popup.active {
       opacity: 1;
       transform: translateY(0);
-      visibility: visible;
     }
     .line-chat-popup-btn {
       display: block;
@@ -43,12 +41,7 @@
       text-align: center;
       text-decoration: none;
       font-weight: 600;
-      transition: background 0.2s ease;
       margin: 0 auto;
-      pointer-events: auto;
-    }
-    .line-chat-popup-btn:hover {
-      background-color: #07a648;
     }
     .line-chat-toggle {
       display: inline-flex;
@@ -62,78 +55,86 @@
       cursor: pointer;
       white-space: nowrap;
       box-shadow: 0 8px 16px rgba(0,0,0,0.15);
-      transition: background 0.2s ease, transform 0.2s ease;
-      pointer-events: auto;    
     }
     .line-chat-toggle:hover {
       background-color: #07a648;
-      transform: translateY(-2px);
     }
   `;
   container.appendChild(style);
 
-  // --- Create Popup ---
-  const popup = document.createElement("div");
-  popup.id = "line-chat-popup";
-  popup.innerHTML = `
-    <div style="display:flex;justify-content:space-between;">
-      <img src="https://www.cariber.co/lineChatWidget/cariber-chat-logo.png" alt="Cariber Chat Logo" style="width:48px;height:48px;">
-      <svg
-        style="cursor: pointer;"
-        onclick="document.getElementById('line-chat-popup').classList.remove('active')"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M6 6L18 18M18 6L6 18"
-          stroke="black"
-          stroke-width="2"
-          stroke-linecap="round"
-        />
-      </svg>
-    </div>
-    <p style="color:black;margin:1rem 0;text-align:center;">
-      สวัสดีครับ สามารถสอบถามได้เลยครับ
-    </p>
-    <div style="display:flex;justify-content:center;">
-      <a class="line-chat-popup-btn" href="https://lin.ee/DmtQfgp" target="_blank">
-        เริ่มแชทกับเรา
-      </a>
-    </div>
+  let popup = null;
 
-  `;
-  container.appendChild(popup);
+  /** Create popup DOM */
+  function createPopup() {
+    const p = document.createElement("div");
+    p.className = "line-chat-popup";
 
-  // --- Create Toggle Button ---
-  const toggleWrapper = document.createElement("div");
-  toggleWrapper.style.cssText = "display:flex;justify-content:flex-end;";
-  const toggle = document.createElement("div");
-  toggle.className = "line-chat-toggle";
-  toggle.innerHTML = `
-    <img src="https://www.cariber.co/lineChatWidget/LINE.png" alt="Line Logo" style="width:32px;height:32px;">
-    คุยกับเรา
-  `;
-  toggle.onclick = togglePopup;
-  toggleWrapper.appendChild(toggle);
-  container.appendChild(toggleWrapper);
+    p.innerHTML = `
+      <div style="display:flex;justify-content:space-between;">
+        <img src="https://www.cariber.co/lineChatWidget/cariber-chat-logo.png" style="width:48px;height:48px;">
+        <svg width="24" height="24" style="cursor:pointer;" viewBox="0 0 24 24">
+          <path d="M6 6L18 18M18 6L6 18" stroke="black" stroke-width="2" stroke-linecap="round" />
+        </svg>
+      </div>
+      <p style="color:black;margin:1rem 0;text-align:center;">
+        สวัสดีครับ สามารถสอบถามได้เลยครับ
+      </p>
+      <div style="display:flex;justify-content:center;">
+        <a class="line-chat-popup-btn" href="https://lin.ee/DmtQfgp" target="_blank">
+          เริ่มแชทกับเรา
+        </a>
+      </div>
+    `;
 
-  // --- Toggle Function ---
-  function togglePopup(e) {
-    popup.classList.toggle("active");
-    if (popup.classList.contains("active")) {
-      document.addEventListener("click", outsideClose);
-    } else {
-      document.removeEventListener("click", outsideClose);
-    }
+    // Close button
+    p.querySelector("svg").onclick = closePopup;
+
+    return p;
+  }
+
+  /** Open popup (add DOM above toggle) */
+  function openPopup() {
+    if (popup) return;
+
+    popup = createPopup();
+
+    // Insert popup at the top of container
+    container.insertBefore(popup, toggle);
+
+    requestAnimationFrame(() => popup.classList.add("active"));
+
+    document.addEventListener("click", outsideClose);
+  }
+
+  /** Close popup (remove DOM) */
+  function closePopup() {
+    if (!popup) return;
+
+    popup.classList.remove("active");
+
+    setTimeout(() => {
+      popup.remove();
+      popup = null;
+    }, 250);
+
+    document.removeEventListener("click", outsideClose);
   }
 
   function outsideClose(e) {
+    if (!popup) return;
+
     if (!popup.contains(e.target) && !toggle.contains(e.target)) {
-      popup.classList.remove("active");
-      document.removeEventListener("click", outsideClose);
+      closePopup();
     }
   }
+
+  // --- Toggle Button (ALWAYS bottom) ---
+  const toggle = document.createElement("div");
+  toggle.className = "line-chat-toggle";
+  toggle.innerHTML = `
+    <img src="https://www.cariber.co/lineChatWidget/LINE.png" style="width:32px;height:32px;">
+    คุยกับเรา
+  `;
+  toggle.onclick = () => (popup ? closePopup() : openPopup());
+  container.appendChild(toggle);
 })();
