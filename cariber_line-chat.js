@@ -1,4 +1,8 @@
 (function () {
+  const path = window.location.pathname;
+  if (path.includes("/ace")) {
+    return; // Don't load on /ace path
+  }
   const container = document.createElement("div");
   container.id = "line-chat";
   container.style.cssText = `
