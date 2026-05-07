@@ -1,7 +1,7 @@
 (function () {
   const path = window.location.pathname;
-  if (path.includes("/ace")) {
-    return; // Don't load on /ace path
+  if (path.includes("/ace") || path.includes("/shopee-ceo-bundle")) {
+    return; // Don't load on these above path
   }
   const container = document.createElement("div");
   container.id = "line-chat";
